@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+    Options +MultiViews
+    RewriteEngine On
+    RewriteBase /accountsoft/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([^\.]+)$ $1.php [NC,L]
+    RewriteCond $1 !^(index\.php|assets|includes|src|robots\.txt)
+    RewriteRule ^(.*)$ index.php/params=$1 [L,QSA]
+
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+</IfModule>
+<IfModule !mod_rewrite.c>
+    ErrorDocument 404 /index.php
+</IfModule>

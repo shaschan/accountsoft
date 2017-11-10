@@ -1,0 +1,108 @@
+@font-face {
+    font-family: QuickSand;
+    font-weight: normal;
+    src: url("../font/Quicksand-Regular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: QuickSand;
+    font-weight: bold;
+    src: url("../font/Quicksand-Bold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: QuickSand;
+    font-weight: lighter;
+    src: url("../font/Quicksand-Light.otf") format("opentype");
+}
+
+@font-face {
+    font-family: QuickSand;
+    font-weight: normal;
+    font-style: italic;
+    src: url("../font/Quicksand-Italic.otf") format("opentype");
+}
+
+@font-face {
+    font-family: QuickSand;
+    font-weight: bold;
+    font-style: italic;
+    src: url("../font/Quicksand-BoldItalic.otf") format("opentype");
+}
+
+@font-face {
+    font-family: QuickSand;
+    font-weight: lighter;
+    font-style: italic;
+    src: url("../font/Quicksand-LightItalic.otf") format("opentype");
+}
+
+.inner_landing_bg{
+    background-color: whitesmoke;
+    background-size: cover;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    padding-bottom: 219px;
+}
+
+.landing_bg{
+    background-image: url("../images/landing_bg.jpg");
+    background-size: cover;
+    width: 100%;
+    height: auto;
+    min-height: 500px;
+}
+
+.jumbotron{
+    background-image: url("../images/header.png");
+    background-repeat: round;
+    background-size: contain;
+    padding: 2px 40px 2px 40px !important;
+    border-bottom: 1px solid #9c9191 !important;
+    min-height: 80px !important;
+    margin-bottom: 0px !important;
+    background-color: #0d98bc !important;
+    color: white !important;
+}
+.loginLoader {
+    position: absolute;
+    z-index: 99;
+    margin-left: 28%;
+    border: 32px solid #f3f3f3; /* Light grey */
+    border-top: 32px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 250px;
+    height: 250px;
+    animation: spin 2s linear infinite;
+}
+
+.signupLoader {
+    margin-top: 10%;
+    position: absolute;
+    z-index: 99;
+    margin-left: 18%;
+    border: 32px solid #f3f3f3; /* Light grey */
+    border-top: 32px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 400px;
+    height: 400px;
+    animation: spin 2s linear infinite;
+}
+
+.firstLoginLoader{
+    position: absolute;
+    z-index: 99;
+    margin-left: 16%;
+    border: 32px solid #f3f3f3; /* Light grey */
+    border-top: 32px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 250px;
+    height: 250px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
