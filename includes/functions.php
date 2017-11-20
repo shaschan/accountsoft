@@ -1,6 +1,7 @@
 <?php
     include_once dirname(__FILE__,2).'/config.php';
     $conf = new config();
+    ob_start();
     require $conf->includesFolderBASEPATH."dbconn.php";
     session_start();
     class Functions extends DbConn{
@@ -186,7 +187,72 @@
             return 0;
         }
         
-        public function getAllEstimate($ccode, $estNo){
+        public function getAllInvoices($ccode, $cpoNum = '', $invNum = ''){
+            
+            if(strcmp( $_SESSION['user_id'], "") == 0 || strcmp($ccode, "") == 0) return 2;
+            
+            try {
+                $db = new DbConn;
+                $tbl_quote = $db->tbl_quote;
+                $err = '';
+            } catch (PDOException $e) {
+                $err = "Error: " . $e->getMessage();
+            }
+ 
+            $invQry = '';
+            if(strcmp($invNum, '') != 0){
+                $invQry = " AND invoiceNum = '".$invNum."' ";
+            }
+            
+            $cpoQry = '';
+            if(strcmp($cpoNum, '') != 0){
+                $cpoQry = " AND cponum = '".$cpoNum."' ";
+            }
+            
+            $stmtSr = $db->conn->prepare("SELECT * FROM ".$tbl_quote." WHERE user_id = :id AND ccode = :ccode ".$cpoQry.$invQry);
+            $stmtSr->bindParam(':id', $_SESSION['user_id']);
+            $stmtSr->bindParam(':ccode', $ccode);
+            $stmtSr->execute();
+
+            // Gets query result
+            $result = $stmtSr->fetchAll(PDO::FETCH_ASSOC);
+
+            if(is_array($result)){
+                return json_encode($result);
+            }else{
+                return 1;
+            }
+        }
+        
+        public function getInvoices($ccode, $cpoNum){
+            
+            if(strcmp( $_SESSION['user_id'], "") == 0 || strcmp($cpoNum, "") == 0 || strcmp($ccode, "") == 0) return 2;
+            
+            try {
+                $db = new DbConn;
+                $tbl_quote = $db->tbl_quote;
+                $err = '';
+            } catch (PDOException $e) {
+                $err = "Error: " . $e->getMessage();
+            }
+ 
+            $stmtSr = $db->conn->prepare("SELECT DISTINCT(invoiceNum) FROM ".$tbl_quote." WHERE user_id = :id AND ccode = :ccode AND cponum = :cponum");
+            $stmtSr->bindParam(':id', $_SESSION['user_id']);
+            $stmtSr->bindParam(':ccode', $ccode);
+            $stmtSr->bindParam(':cponum', $cpoNum);
+            $stmtSr->execute();
+
+            // Gets query result
+            $result = $stmtSr->fetchAll(PDO::FETCH_ASSOC);
+
+            if(is_array($result)){
+                return json_encode($result);
+            }else{
+                return 1;
+            }
+        }
+        
+        public function getAllEstimate($ccode, $estNo, $cponum = ''){
             
             if(strcmp( $_SESSION['user_id'], "") == 0 || strcmp($ccode, "") == 0) return 2;
 
@@ -201,9 +267,14 @@
             $estQry = '';
             
             if(strcmp($estNo,'') != 0)
-                    $estQry = " AND estimateNo = '".$estNo."'";
+                    $estQry = " AND estimateNo = '".$estNo."' ";
             
-            $stmtSr = $db->conn->prepare("SELECT * FROM ".$tbl_quote." WHERE user_id = :id AND ccode = :ccode ".$estQry);
+            $cponumQry = '';
+            
+            if(strcmp($cponum,'') != 0)
+                    $cponumQry = " AND cponum = '".$cponum."' ";
+            
+            $stmtSr = $db->conn->prepare("SELECT * FROM ".$tbl_quote." WHERE user_id = :id AND ccode = :ccode ".$estQry.$cponumQry);
             $stmtSr->bindParam(':id', $_SESSION['user_id']);
             $stmtSr->bindParam(':ccode', $ccode);
             $stmtSr->execute();
@@ -239,6 +310,170 @@
            
         }
         
+        public function cancelInvoice($invNum){
+            if(strcmp( $_SESSION['user_id'], "") == 0 || strcmp($invNum, "") == 0 || strcmp($invNum, "0") == 0) return 2;
+            
+            try {
+                $db = new DbConn;
+                $tbl_invoice = $db->tbl_invoice;
+                $err = '';
+            } catch (PDOException $e) {
+                $err = "Error: " . $e->getMessage();
+            }
+            
+            $stmtUp = $db->conn->prepare("UPDATE ".$tbl_invoice." SET status = 'cancelled' WHERE invoiceNum = :invoiceNum and status <>  'overwritten' ");
+            $stmtUp->bindParam(':invoiceNum', $invNum);
+            $stmtUp->execute();
+            
+            return 0;
+        }
+        
+        public function submitInvoice($invoice, $singleInvoice){
+            if( strcmp( $_SESSION['user_id'], "") == 0 || strcmp($invoice['ccode'], "") == 0 ||
+                strcmp( $invoice['estNos'], "") == 0 || strcmp($invoice['estNos'], "Estimate Number") == 0 ||
+                strcmp( $invoice['cpoNums'], "") == 0 || strcmp($invoice['cpoNums'], "PO Number") == 0 ||    
+                strcmp( $singleInvoice['invoicenum'], "0") == 0 || strcmp($singleInvoice['invoicenum'], "") == 0 ||    
+                strcmp( $singleInvoice['items']['adOrInOrFin'], "") == 0 || strcmp($singleInvoice['items']['adOrInOrFin'], "Select One") == 0 ||    
+                strcmp( $singleInvoice['items']['tax'], "") == 0 || strcmp($singleInvoice['items']['totalValue'], "") == 0 ||
+                strcmp( $singleInvoice['items']['paymentDate'], "") == 0 || strcmp($singleInvoice['items']['totalValue'], "") == 0 ||
+                strcmp( $singleInvoice['items']['description'], "") == 0 || strcmp($singleInvoice['items']['netValue'], "") == 0 ||
+                strcmp( $singleInvoice['addedBy'], "") == 0 || strcmp($singleInvoice['addedBy'], "Select Adder") == 0 ||    
+                strcmp( $singleInvoice['approvedBy1'], "") == 0 || strcmp($singleInvoice['approvedBy1'], "Select Approver") == 0 ||
+                strcmp( $singleInvoice['approvedBy2'], "") == 0 || strcmp($singleInvoice['approvedBy2'], "Select Approver") == 0
+                ){
+                    return 1;
+            }
+            
+            $datetimeNow = date("Y-m-d H:i:s");
+            
+            try {
+                $db = new DbConn;
+                $tbl_quote = $db->tbl_quote;
+                $tbl_invoice = $db->tbl_invoice;
+                $err = '';
+            } catch (PDOException $e) {
+                $err = "Error: " . $e->getMessage();
+            }
+            
+            $stmtSrPr = $db->conn->prepare("SELECT invoiceNum FROM ".$tbl_quote." WHERE user_id = :id and ccode = :ccode and estimateNo = :estimateNo");
+            $stmtSrPr->bindParam(':id', $_SESSION['user_id']);
+            $stmtSrPr->bindParam(':ccode', $invoice['ccode']);
+            $stmtSrPr->bindParam(':estimateNo',  $invoice['estNos']);
+            $stmtSrPr->execute();
+            
+            $existingInvNo = ($stmtSrPr->fetch(PDO::FETCH_ASSOC))['invoiceNum'];
+
+            $stmtUp = $db->conn->prepare("UPDATE ".$tbl_quote." SET invoiceNum = :invoiceNum WHERE user_id = :id and ccode = :ccode and estimateNo = :estimateNo");
+            $stmtUp->bindParam(':invoiceNum', $singleInvoice['invoicenum']);
+            $stmtUp->bindParam(':id', $_SESSION['user_id']);
+            $stmtUp->bindParam(':ccode', $invoice['ccode']);
+            $stmtUp->bindParam(':estimateNo',  $invoice['estNos']);
+            $stmtUp->execute();
+            
+            if(strcmp($existingInvNo, "") != 0){
+                $stmtUp = $db->conn->prepare("UPDATE ".$tbl_invoice." SET status = 'overwritten' WHERE invoiceNum = :invoiceNum");
+                $stmtUp->bindParam(':invoiceNum', $existingInvNo);
+                $stmtUp->execute();
+            }
+            
+            $stmt = $db->conn->prepare("INSERT INTO ".$tbl_invoice." (invoiceNum, adOrInOrFin, description, netValue, tax, totalValue, paymentDate, status, addedBy, approvedBy1, approvedBy2, added_on)
+            VALUES (:invoiceNum, :adOrInOrFin, :description, :netValue, :tax, :totalValue, :paymentDate, 'active', :addedBy, :approvedBy1, :approvedBy2, :added_on)");
+
+            $stmt->bindParam(':invoiceNum', $singleInvoice['invoicenum']);
+            $stmt->bindParam(':adOrInOrFin', $singleInvoice['items']['adOrInOrFin']);
+            $stmt->bindParam(':description', $singleInvoice['items']['description']);
+            $stmt->bindParam(':netValue', $singleInvoice['items']['netValue']);
+            $stmt->bindParam(':tax', $singleInvoice['items']['tax']);
+            $stmt->bindParam(':totalValue', $singleInvoice['items']['totalValue']);
+            $stmt->bindParam(':paymentDate', $singleInvoice['items']['paymentDate']);
+            $stmt->bindParam(':addedBy',  $singleInvoice['addedBy']);
+            $stmt->bindParam(':approvedBy1',  $singleInvoice['approvedBy1']);
+            $stmt->bindParam(':approvedBy2', $singleInvoice['approvedBy1']);
+            $stmt->bindParam(':added_on', $datetimeNow);
+            $stmt->execute();
+            
+            return 0;
+        }
+        
+        public function getInvoiceDetails($ccode){
+            if(strcmp( $_SESSION['user_id'], "") == 0 || strcmp($ccode, "") == 0) return 2;
+            
+            try {
+                $db = new DbConn;
+                $tbl_quote = $db->tbl_quote;
+                $tbl_invoice = $db->tbl_invoice;
+                $err = '';
+            } catch (PDOException $e) {
+                $err = "Error: " . $e->getMessage();
+            }
+ 
+            $stmtSr = $db->conn->prepare("SELECT * FROM ".$tbl_invoice." WHERE :ccode in (select ccode from ".$tbl_quote." where user_id = :id and ccode = :ccode) and status <> 'overwritten'");
+            $stmtSr->bindParam(':id', $_SESSION['user_id']);
+            $stmtSr->bindParam(':ccode', $ccode);
+            $stmtSr->execute();
+
+            // Gets query result
+            $result = $stmtSr->fetchAll(PDO::FETCH_ASSOC);
+
+            if(is_array($result)){
+                
+                $data = array();
+                
+                for($idx = 0; $idx < count($result); $idx ++){
+                    $data[$idx]['invoiceNum'] = $result[$idx]['invoiceNum'];
+                    $data[$idx]['adOrInOrFin'] = $result[$idx]['adOrInOrFin'];
+                    $data[$idx]['description'] = $result[$idx]['description'];
+                    $data[$idx]['netValue'] = $result[$idx]['netValue'];
+                    $data[$idx]['tax'] = $result[$idx]['tax'];
+                    $data[$idx]['totalValue'] = $result[$idx]['totalValue'];
+                    $data[$idx]['paymentDate'] = $result[$idx]['paymentDate'];
+                    $data[$idx]['added_on'] = $result[$idx]['added_on'];
+                    $data[$idx]['added_by'] = $this->getEmployeeByEcode($result[$idx]['addedBy'])['name'];
+                    $data[$idx]['approved_by'] = $this->getEmployeeByEcode($result[$idx]['approvedBy1'])['name'].', '.$this->getEmployeeByEcode($result[$idx]['approvedBy2'])['name'];
+                    $data[$idx]['status'] = $result[$idx]['status'];
+                }
+                
+                return json_encode($data);
+            }else{
+                return 1;
+            }
+        }
+        
+        public function getCPOnums($ccode, $estNo = 'NA'){
+            
+            if(strcmp( $_SESSION['user_id'], "") == 0 || strcmp($ccode, "") == 0 ||
+                   strcmp($estNo, "") == 0 || strcmp($estNo, "Estimate Number") == 0 ) return 2;
+            
+            try {
+                $db = new DbConn;
+                $tbl_quote = $db->tbl_quote;
+                $err = '';
+            } catch (PDOException $e) {
+                $err = "Error: " . $e->getMessage();
+            }
+ 
+            $estNoStr = '';
+            
+            if(strcmp($estNo,'NA') != 0){
+                $estNoStr = " AND estimateNo = '".$estNo."' ";
+            }
+            
+            $stmtSr = $db->conn->prepare("SELECT DISTINCT(cponum) FROM ".$tbl_quote." WHERE user_id = :id AND ccode = :ccode ".$estNoStr." AND cponum <> ''");
+            $stmtSr->bindParam(':id', $_SESSION['user_id']);
+            $stmtSr->bindParam(':ccode', $ccode);
+            $stmtSr->execute();
+
+            // Gets query result
+            $result = $stmtSr->fetchAll(PDO::FETCH_ASSOC);
+
+            if(is_array($result)){
+                return json_encode($result);
+            }else{
+                return 1;
+            }
+           
+        }
+        
         public function getEstimates($ccode){
             
             if(strcmp( $_SESSION['user_id'], "") == 0 || strcmp($ccode, "") == 0) return 2;
@@ -251,7 +486,7 @@
                 $err = "Error: " . $e->getMessage();
             }
  
-            $stmtSr = $db->conn->prepare("SELECT DISTINCT(estimateNo) FROM ".$tbl_quote." WHERE user_id = :id AND ccode = :ccode");
+            $stmtSr = $db->conn->prepare("SELECT DISTINCT(estimateNo), invoiceNum FROM ".$tbl_quote." WHERE user_id = :id AND ccode = :ccode");
             $stmtSr->bindParam(':id', $_SESSION['user_id']);
             $stmtSr->bindParam(':ccode', $ccode);
             $stmtSr->execute();
@@ -461,5 +696,5 @@
            
         }
     }
-
+    ob_flush();
 ?>

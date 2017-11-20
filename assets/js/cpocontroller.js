@@ -50,6 +50,7 @@ fmsApp.controller('cpoController', ['$scope', '$http', '$timeout', '$sce', '$com
                     $scope.cpo.message = "Something went wrong! Please try again after some time.";
                 }else{
                     var clNameDiv = document.getElementById('estNos');
+                    angular.element(clNameDiv).empty();
                     angular.forEach(response, function(value, key) {
                         var html = '<li style="cursor: pointer; padding: 8px;" ng-click='+
                                 '"cpo.listup('+"'"+ccode+"','"+value.estimateNo+"'"+'); cpo.primtendency = '+"'false';"+'"'+
@@ -165,6 +166,7 @@ fmsApp.controller('cpoController', ['$scope', '$http', '$timeout', '$sce', '$com
                     $scope.cpo.message = "Something went wrong! Please try again after some time.";
                 }else{
                     var clNameDiv = document.getElementById('clientNames');
+                    angular.element(clNameDiv).empty();
                     angular.forEach(response, function(value, key) {
                         var html = '<li style="cursor: pointer; padding: 8px;" ng-click='+
                                 '"cpo.fillUp('+"'"+value.client_name+"','"+value.billing_address+"','"+

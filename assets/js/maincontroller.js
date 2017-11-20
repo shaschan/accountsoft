@@ -12,10 +12,10 @@ fmsApp.controller('mainController', ['$scope', '$http', '$timeout',
             quote : "quote",
             cpo : "cpo",
             invoice: "invoice",
-            debitNote : "debitnote",
-            creditNote : "creditnote",
-            bankDepositVoucher : "bankdepositvoucher",
-            paymentReceiptNote : "paymentreceiptnote"
+            debitNote : "debitNote",
+            creditNote : "creditNote",
+            bankDepositVoucher : "bankDepositVoucher",
+            paymentReceiptNote : "paymentReceiptNote"
         },
         accountPay: {
             purchaseOrder: "purchaseorder",

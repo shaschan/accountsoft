@@ -3,145 +3,326 @@ fmsApp.controller('invoiceController', ['$scope', '$http', '$timeout', '$sce', '
 
 //    $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 
-    $scope.cpo = {
+    $scope.singleInvoice = {
+        invoicenum: 0,
+        items: {
+            adOrInOrFin: 'Select One',
+            description: '',
+            netValue: '',
+            tax: '',
+            totalValue: '',
+            paymentDate: ''
+        },
+        invoice_loader: false,
+        message: '',
+        employees: [],
+        invList: [],
+        addedBy: 'Select Adder',
+        approvedBy1: 'Select Approver',
+        approvedBy2: 'Select Approver',
+        submitInvoice: function() { submitInvoice() },
+        cancelInvoice: function(invNum, idx){var inv_num = invNum; var indx = idx; cancelInvoice(inv_num, indx);},
+        getInvoice: function(invNum){var inv_num = invNum; getInvoice(inv_num);},
+        clearInvSegment: function(){     
+                                        $scope.singleInvoice.items = {
+                                                                        adOrInOrFin: 'Select One',
+                                                                        description: '',
+                                                                        netValue: '',
+                                                                        tax: '',
+                                                                        totalValue: '',
+                                                                        paymentDate: ''
+                                                                    };
+                                        $scope.singleInvoice.invoice_loader = false;
+                                        $scope.singleInvoice.message = '';
+                                        $scope.singleInvoice.addedBy = 'Select Adder';
+                                        $scope.singleInvoice.approvedBy1 = 'Select Approver';
+                                        $scope.singleInvoice.approvedBy2 = 'Select Approver';
+                                                                    
+        }
+        
+    };
+    
+    function getInvoice(invNum){
+        
+    };
+    
+    function cancelInvoice(invNum, idx){
+        
+        if(idx !== '' && invNum != '' && invNum != 0){
+
+            $http({
+                method : "POST",
+                url : 'includes/invoice',
+                data : {invNum: invNum, token: "cancelInvoice"},
+            }).success(function(response) {
+                if(response == 1){
+                    $scope.invoice.message = "Something went wrong! Please try again after some time";
+                }else{
+                    $scope.invoice.message = "Successfully cancelled!!";
+                    $scope.singleInvoice.invList[idx].status = 'cancelled';
+                }
+            }).error(function(data) {
+                $scope.invoice.message = ("Something went wrong! Please try again after some time. "+data);
+            });
+        }else{
+            $scope.invoice.message = ("Something went wrong! Please try again after some time.");
+        }
+    };
+    
+    function submitInvoice(){
+        if(     $scope.invoice.ccode !== '' && $scope.singleInvoice.invoice_loader === false && $scope.invoice.generate === true &&
+                $scope.invoice.estNos !== '' && $scope.invoice.estNos !== 'Estimate Number' &&
+                $scope.invoice.cpoNums !== '' && $scope.invoice.cpoNums !== 'PO Number' &&
+                $scope.singleInvoice.invoicenum != 0 && $scope.singleInvoice.invoicenum != '' &&
+                $scope.singleInvoice.addedBy != '' && $scope.singleInvoice.addedBy != 'Select Adder' &&
+                $scope.singleInvoice.approvedBy1 != '' && $scope.singleInvoice.approvedBy1 != 'Select Approver' &&
+                $scope.singleInvoice.approvedBy2 != '' && $scope.singleInvoice.approvedBy2 != 'Select Approver' &&
+                $scope.singleInvoice.items.adOrInOrFin != '' && $scope.singleInvoice.items.adOrInOrFin != 'Select One' &&
+                $scope.singleInvoice.items.description != '' && $scope.singleInvoice.items.totalValue != 'Select One' &&
+                $scope.singleInvoice.items.netValue != '' && $scope.singleInvoice.items.paymentDate != 'Select One' &&
+                $scope.singleInvoice.items.tax != ''
+            ){
+                
+            $http({
+                method : "POST",
+                url : 'includes/invoice',
+                data : {invoice: $scope.invoice, singleInvoice: $scope.singleInvoice, token: "submitInvoice"},
+            }).success(function(response) {
+                if(response == 1){
+                    $scope.singleInvoice.message = "Something went wrong! Please try again after some time";
+                }else{
+                    $scope.singleInvoice.message = "Successfully submitted!!";
+                }
+                $scope.singleInvoice.invoice_loader = false;
+            }).error(function(data) {
+                $scope.singleInvoice.message = ("Something went wrong! Please try again after some time. "+data);
+                $scope.singleInvoice.invoice_loader = false;
+            });
+        }else{
+            if($scope.singleInvoice.invoice_loader === true){
+                $scope.singleInvoice.message = ("Please wait...");
+            }else if($scope.invoice.generate === false){
+                $scope.singleInvoice.message = ("Invoice Number not generated!");
+            }else{
+                $scope.singleInvoice.message = ("One or more fields cannot be left blank.");
+            }
+        }
+    };
+    
+    $scope.invoice = {
         tendency: false,
-        primtendency : true,
+        primtendency : false,
         clientName: "Client Name",
+        estNos: 'Estimate Number',
+        cpoNums: 'PO Number',
         billingAddress: '',
         pan: '',
         gst: '',
         sac: '',
-        cponum: '',
         ccode: '',
-        pc: '',
         generate: false,
-        cpo_loader: false,
+        invoice_loader: false,
         message: '',
-        estNos: 'Estimate Number',
         estList: [],
-        generateAndAssignPC:function() {generateAndAssignPC()},
+        generateAndAssignInvoiceNum:function() {generateAndAssignInvoiceNum()},
         clearEverything:    function() {clearEverything()},
         downloadPDF:        function() {downloadPDF()},
         printPDF:   function() {printPDF()},
-        listup:     function(ccode, estno) {var c_code = ccode; var est_no = estno; listup(c_code, est_no);},
+        listup:     function(ccode, estno, cponum) {var c_code = ccode; var est_no = estno; var cpo_no = cponum; listup(c_code, est_no, cpo_no);},
         fillUp:     function(clientName, bill_add, pan, gst, sac, ccode) {
-                                                                $scope.cpo.ccode = ccode;
+                                                                $scope.invoice.ccode = ccode;
                                                                 alterEstSectionList(ccode);
-                                                                $scope.cpo.clientName = clientName;
-                                                                $scope.cpo.billingAddress = bill_add;
-                                                                $scope.cpo.pan = pan;
-                                                                $scope.cpo.gst = gst;
-                                                                $scope.cpo.sac = sac;
-                                                            }
+                                                                $scope.invoice.clientName = clientName;
+                                                                $scope.invoice.billingAddress = bill_add;
+                                                                $scope.invoice.pan = pan;
+                                                                $scope.invoice.gst = gst;
+                                                                $scope.invoice.sac = sac;
+                                                            },
+        fillupPos: function(ccode, estno){var c_code = ccode; var est_no = estno; alterCPOSectionList(c_code, est_no);}
+    };
+    
+    function alterCPOSectionList(ccode, estNo){
+        
+        if($scope.invoice.invoice_loader === false){
+            $scope.invoice.invoice_loader = true;
+            $http({
+                method : "GET",
+                url : 'includes/invoice',
+                params : {token: "getCpoNums", ccode: ccode, estimateNo: estNo},
+            }).success(function(response) {
+                if(response == 1){
+                    $scope.invoice.message = "Something went wrong! Please try again after some time.";
+                }else{
+                    console.log("CPOS::",response);
+                    var clNameDiv = document.getElementById('cpoNums');
+                    angular.element(clNameDiv).empty();
+                    angular.forEach(response, function(value, key) {
+                        var html = '<li style="cursor: pointer; padding: 8px;" ng-click='+
+                                '"invoice.listup('+"'"+ccode+"','"+estNo+"','"+value.cponum+"'"+'); '+'"'+
+                                '>'+value.cponum+'</li>';
+                        angular.element(clNameDiv).append( $compile(html)($scope) );
+                    });
+                }
+                $scope.invoice.invoice_loader = false;
+            }).error(function(data) {
+                $scope.invoice.message = ("Something went wrong! Please try again after some time. "+data);
+                $scope.invoice.invoice_loader = false;
+            });
+        }else{
+            $scope.invoice.message = ("Please wait...");
+        }
+    };
+    
+    function getEmployeesDetails() {
+        
+        $http({
+            method : "GET",
+            url : 'includes/invoice',
+            params : {token: "getEmployees"},
+        }).success(function(response) {
+            if(response == 1){
+                $scope.invoice.message = "Something went wrong! Please try again after some time.";
+            }else{
+                $scope.singleInvoice.employees = angular.copy(response);
+            }
+        }).error(function(data) {
+            $scope.invoice.message = ("Something went wrong! Please try again after some time. "+data);
+        });
     };
     
     function alterEstSectionList(ccode){
         
-        listup(ccode,'');
+        listup(ccode, '', '');
         
-        if($scope.cpo.cpo_loader === false){
-            $scope.cpo.cpo_loader = true;
+        if($scope.invoice.invoice_loader === false){
+            $scope.invoice.invoice_loader = true;
             $http({
                 method : "GET",
-                url : 'includes/cpo',
+                url : 'includes/invoice',
                 params : {token: "getEstNos", ccode: ccode},
             }).success(function(response) {
                 if(response == 1){
-                    $scope.cpo.message = "Something went wrong! Please try again after some time.";
+                    $scope.invoice.message = "Something went wrong! Please try again after some time.";
                 }else{
                     var clNameDiv = document.getElementById('estNos');
+                    var invCount = 0;
+                    angular.element(clNameDiv).empty();
                     angular.forEach(response, function(value, key) {
                         var html = '<li style="cursor: pointer; padding: 8px;" ng-click='+
-                                '"cpo.listup('+"'"+ccode+"','"+value.estimateNo+"'"+'); cpo.primtendency = '+"'false';"+'"'+
+                                '"invoice.listup('+"'"+ccode+"','"+value.estimateNo+"'"+'); invoice.primtendency = true; invoice.fillupPos('+"'"+ccode+"','"+value.estimateNo+"'"+"); invoice.cpoNums = 'PO Number'; "+'"'+
                                 '>'+value.estimateNo+'</li>';
                         angular.element(clNameDiv).append( $compile(html)($scope) );
+                        
+                        if(value.invoiceNum != ''){
+                            invCount++;
+                        }
                     });
+                    $scope.singleInvoice.invoicenum = invCount;
                 }
-                $scope.cpo.cpo_loader = false;
+                $scope.invoice.invoice_loader = false;
             }).error(function(data) {
-                $scope.cpo.message = ("Something went wrong! Please try again after some time. "+data);
-                $scope.cpo.cpo_loader = false;
+                $scope.invoice.message = ("Something went wrong! Please try again after some time. "+data);
+                $scope.invoice.invoice_loader = false;
             });
         }else{
-            $scope.cpo.message = ("Please wait...");
+            $scope.invoice.message = ("Please wait...");
         }
     };
     
-    function listup(ccode, estNo){
+    function listup(ccode, estNo = '', cpoNum = ''){
         if(ccode == '') return;
 
         if(estNo != '')
-            $scope.cpo.estNos = estNo;
+            $scope.invoice.estNos = estNo;
+        
+        if(estNo != '' && cpoNum != '')
+            $scope.invoice.cpoNums = cpoNum;
         
         $http({
             method : "GET",
-            url : 'includes/cpo',
-            params : {token: "getAllEstm", ccode: ccode, estimateNo: estNo},
+            url : 'includes/invoice',
+            params : {token: "getAllEstm", ccode: ccode, estimateNo: estNo, cpoNo: cpoNum},
         }).success(function(response) {
             if(response == 1){
-                $scope.cpo.message = "Something went wrong! Please try again after some time.";
+                $scope.invoice.message = "Something went wrong! Please try again after some time.";
             }else{
                 console.log(response)
-                $scope.cpo.estList = angular.copy(response);
+                $scope.invoice.estList = angular.copy(response);
             }
         }).error(function(data) {
-            $scope.cpo.message = ("Something went wrong! Please try again after some time. "+data);
+            $scope.invoice.message = ("Something went wrong! Please try again after some time. "+data);
         });
         
     };
     
-    function generateAndAssignPC(){
-        if($scope.cpo.ccode !== '' && $scope.cpo.cpo_loader === false && 
-                $scope.cpo.estNos !== '' && $scope.cpo.estNos !== 'Estimate Number' &&
-                $scope.cpo.cponum !== ''){
+    function generateAndAssignInvoiceNum(){
+        if($scope.invoice.ccode !== '' && $scope.invoice.invoice_loader === false && $scope.invoice.generate === false &&
+                $scope.invoice.estNos !== '' && $scope.invoice.estNos !== 'Estimate Number' &&
+                $scope.invoice.cpoNums !== '' && $scope.invoice.cpoNums !== 'PO Number'){
 
-            $scope.cpo.cpo_loader = true;
+            $scope.invoice.invoice_loader = true;
+            $scope.invoice.message = '';
+            $scope.invoice.generate = true;
             
-            $scope.cpo.pc = $scope.cpo.clientName.substring(0,3)+'/'+$scope.cpo.cponum.substring(0,5);
+            $scope.singleInvoice.invoicenum = $scope.invoice.clientName.substring(0,3)+(new Date()).getFullYear().toString()+"0"+($scope.singleInvoice.invoicenum+1);
             
             $http({
-                method : "POST",
-                url : 'includes/cpo',
-                data : {ccode: $scope.cpo.ccode, estNo: $scope.cpo.estNos, cponum: $scope.cpo.cponum, pc: $scope.cpo.pc, token: "generateAndAssignPC"},
+                method : "GET",
+                url : 'includes/invoice',
+                params : {token: "getInvoiceDetails", ccode : $scope.invoice.ccode},
             }).success(function(response) {
                 if(response == 1){
-                    $scope.cpo.message = "Something went wrong! Please try again after some time";
+                    $scope.invoice.message = "Something went wrong! Please try again after some time.";
                 }else{
-                    $scope.cpo.message = "Successfully generated and assigned!!";
-                    $scope.cpo.generate = true;
-                    $scope.cpo.primtendency = 'true';
-                    $scope.cpo.cpo_loader = false;
+                    $scope.singleInvoice.invList = angular.copy(response)
                 }
-                $scope.cpo.quote_loader = false;
+                $scope.invoice.invoice_loader = false;
             }).error(function(data) {
-                $scope.cpo.message = ("Something went wrong! Please try again after some time. "+data);
-                $scope.cpo.cpo_loader = false;
+                $scope.invoice.message = ("Something went wrong! Please try again after some time. "+data);
+                $scope.invoice.invoice_loader = false;
             });
         }else{
-            if($scope.cpo.cpo_loader === true){
-                $scope.cpo.message = ("Please wait...");
+            if($scope.invoice.invoice_loader === true){
+                $scope.invoice.message = ("Please wait...");
+            }else if($scope.invoice.generate === true){
+                $scope.invoice.message = ("Already Generated!");
             }else{
-                $scope.cpo.message = ("One or more fields cannot be left blank.");
+                $scope.invoice.message = ("One or more fields cannot be left blank.");
             }
         }
     };
       
     function clearEverything(){
-        $scope.cpo.tendency = false;
-        $scope.cpo.generate = false;
-        $scope.cpo.cponum = '';
-        $scope.cpo.pc = '';
-        $scope.cpo.ccode = '';
-        $scope.cpo.clientName = "Client Name";
-        $scope.cpo.message = '';
-        $scope.cpo.billingAddress = '';
-        $scope.cpo.pan = '';
-        $scope.cpo.gst = '';
-        $scope.cpo.sac = '';
-        $scope.cpo.estList = [];
-        $scope.cpo.primtendency = true;
-        $scope.cpo.estNos = "Estimate Number";
-        $scope.cpo.cpo_loader = false;
+        $scope.invoice.tendency = false;
+        $scope.invoice.generate = false;
+        $scope.invoice.cpoNums = 'PO Number';
+        $scope.invoice.ccode = '';
+        $scope.invoice.clientName = "Client Name";
+        $scope.invoice.message = '';
+        $scope.invoice.billingAddress = '';
+        $scope.invoice.pan = '';
+        $scope.invoice.gst = '';
+        $scope.invoice.sac = '';
+        $scope.invoice.estList = [];
+        $scope.invoice.primtendency = false;
+        $scope.invoice.estNos = "Estimate Number";
+        $scope.invoice.invoice_loader = false;
+        $scope.singleInvoice.invoicenum = 0;
+        $scope.singleInvoice.items = {
+                                        adOrInOrFin: 'Select One',
+                                        description: '',
+                                        netValue: '',
+                                        tax: '',
+                                        totalValue: '',
+                                        paymentDate: ''
+                                    };
+        $scope.singleInvoice.invoice_loader = false;
+        $scope.singleInvoice.message = '';
+        $scope.singleInvoice.employees = [];
+        $scope.singleInvoice.invList = [];
+        $scope.singleInvoice.addedBy = 'Select Adder';
+        $scope.singleInvoice.approvedBy1 = 'Select Approver';
+        $scope.singleInvoice.approvedBy2 = 'Select Approver';
     };  
     
     function downloadPDF(){
@@ -154,32 +335,34 @@ fmsApp.controller('invoiceController', ['$scope', '$http', '$timeout', '$sce', '
     
     function getClientsList(){
         
-        if($scope.cpo.cpo_loader === false){
-            $scope.cpo.cpo_loader = true;
+        if($scope.invoice.invoice_loader === false){
+            $scope.invoice.invoice_loader = true;
             $http({
                 method : "GET",
-                url : 'includes/cpo',
+                url : 'includes/invoice',
                 params : {token: "getClients"},
             }).success(function(response) {
                 if(response == 1){
-                    $scope.cpo.message = "Something went wrong! Please try again after some time.";
+                    $scope.invoice.message = "Something went wrong! Please try again after some time.";
                 }else{
                     var clNameDiv = document.getElementById('clientNames');
+                    angular.element(clNameDiv).empty();
                     angular.forEach(response, function(value, key) {
                         var html = '<li style="cursor: pointer; padding: 8px;" ng-click='+
-                                '"cpo.fillUp('+"'"+value.client_name+"','"+value.billing_address+"','"+
-                                value.PAN+"','"+value.GST+"','"+value.SAC+"','"+value.ccode+"'"+'); cpo.primtendency = '+"'true';"+' cpo.tendency = '+"'true';"+' cpo.estNos = '+"'Estimate Number';"+'"'+
+                                '"invoice.fillUp('+"'"+value.client_name+"','"+value.billing_address+"','"+
+                                value.PAN+"','"+value.GST+"','"+value.SAC+"','"+value.ccode+"'"+'); invoice.primtendency = '+"false;"+' invoice.tendency = '+"true;"+' invoice.cpoNums = '+"'PO Number';"+' invoice.estNos = '+"'Estimate Number';"+'"'+
                                 '>'+value.client_name+'</li>';
                         angular.element(clNameDiv).append( $compile(html)($scope) );
                     });
+                    getEmployeesDetails();
                 }
-                $scope.cpo.cpo_loader = false;
+                $scope.invoice.invoice_loader = false;
             }).error(function(data) {
-                $scope.cpo.message = ("Something went wrong! Please try again after some time. "+data);
-                $scope.cpo.cpo_loader = false;
+                $scope.invoice.message = ("Something went wrong! Please try again after some time. "+data);
+                $scope.invoice.invoice_loader = false;
             });
         }else{
-            $scope.cpo.message = ("Please wait...");
+            $scope.invoice.message = ("Please wait...");
         }
     };
     

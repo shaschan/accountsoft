@@ -43,6 +43,9 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     
+        <!-- Latest compiled Jquery UI CSS -->
+    <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css">-->
+    
 
     <!-- jQuery library -->
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
@@ -59,13 +62,15 @@
     <script src="<?php echo $conf->assetsFolderURL?>/js/customize.js"></script>
     <script src="<?php echo $conf->assetsFolderURL?>/js/sidebar.js"></script>
     
-    <!-- angular js files-->
+    <!-- angular controllers js files-->
     <script src="<?php echo $conf->assetsFolderURL?>/js/maincontroller.js"></script>
     <script src="<?php echo $conf->assetsFolderURL?>/js/customdirectives.js"></script>
     <script src="<?php echo $conf->assetsFolderURL?>/js/dashboardcontroller.js"></script>
     <script src="<?php echo $conf->assetsFolderURL?>/js/quotecontroller.js"></script>
     <script src="<?php echo $conf->assetsFolderURL?>/js/cpocontroller.js"></script>
     <script src="<?php echo $conf->assetsFolderURL?>/js/invoicecontroller.js"></script>
+    <script src="<?php echo $conf->assetsFolderURL?>/js/debitNotecontroller.js"></script>
+    <script src="<?php echo $conf->assetsFolderURL?>/js/creditNotecontroller.js"></script>
 
     
 

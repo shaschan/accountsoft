@@ -6,18 +6,18 @@
     
     $post_request = json_decode(file_get_contents("php://input"), true);
     
-    if(isset($post_request) && array_key_exists("token", $post_request) && (strcmp($post_request['token'], "submitInvoice") == 0)){
-        if(array_key_exists("invoice", $post_request) && (is_array($post_request['invoice'])) &&
-           array_key_exists("singleInvoice", $post_request) && (is_array($post_request['singleInvoice'])) ){
-            print_r($functions->submitInvoice($post_request['invoice'], $post_request['singleInvoice']));
+    if(isset($post_request) && array_key_exists("token", $post_request) && (strcmp($post_request['token'], "submitCN") == 0)){
+        if(array_key_exists("cn", $post_request) && (is_array($post_request['cn'])) &&
+           array_key_exists("singleCN", $post_request) && (is_array($post_request['singleCN'])) ){
+            print_r($functions->submitCN($post_request['cn'], $post_request['singleCN']));
         }else{
             print_r(1);
         }
     }
     
-    if(isset($post_request) && array_key_exists("token", $post_request) && (strcmp($post_request['token'], "cancelInvoice") == 0)){
+    if(isset($post_request) && array_key_exists("token", $post_request) && (strcmp($post_request['token'], "cancelCN") == 0)){
         if(array_key_exists("invNum", $post_request) && (strcmp($post_request['invNum'], '') != 0) && (strcmp($post_request['invNum'], '0') != 0)){
-            print_r($functions->cancelInvoice($post_request['invNum']));
+            print_r($functions->cancelCN($post_request['invNum']));
         }else{
             print_r(1);
         }
@@ -43,9 +43,9 @@
         }
     }
     
-    if(isset($_GET) && array_key_exists("token", $_GET) && (strcmp($_GET['token'], "getInvoiceDetails") == 0)){
+    if(isset($_GET) && array_key_exists("token", $_GET) && (strcmp($_GET['token'], "getCNDetails") == 0)){
         if(array_key_exists("ccode", $_GET) && (strcmp($_GET['ccode'], '') != 0)){
-            print_r($functions->getInvoiceDetails($_GET['ccode']));
+            print_r($functions->getCNDetails($_GET['ccode']));
         }else{
             print_r(1);
         }

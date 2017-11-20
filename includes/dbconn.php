@@ -16,6 +16,9 @@ class DbConn
         $this->tbl_client = $tbl_client;
         $this->tbl_quote = $tbl_quote;
         $this->tbl_employee = $tbl_employee;
+        $this->tbl_invoice = $tbl_invoice;
+        $this->tbl_creditNotes = $tbl_creditNotes;
+        $this->tbl_debitNotes = $tbl_debitNotes;
 
         try {
                 // Connect to server and select database.

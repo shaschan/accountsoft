@@ -13,3 +13,6 @@ $tbl_company = $tbl_prefix."company";
 $tbl_client = $tbl_prefix."clients";
 $tbl_quote = $tbl_prefix."quote";
 $tbl_employee = $tbl_prefix."employee";
+$tbl_invoice = $tbl_prefix."invoice";
+$tbl_creditNotes = $tbl_prefix."creditNotes";
+$tbl_debitNotes = $tbl_prefix."debitNotes";
