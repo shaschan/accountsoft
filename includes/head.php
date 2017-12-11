@@ -33,7 +33,7 @@
 
     <link rel="icon" type="image/x-icon" href="<?php echo $conf->assetsFolderURL?>/images/favicon.ico" />
     
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <link href="<?php echo $conf->assetsFolderURL?>/css/dist/font-awesome-3.2.1.css" rel="stylesheet">
     <!-- custom css files-->
     <link rel="stylesheet" href="<?php echo $conf->assetsFolderURL?>/css/sidebar.css">
     
@@ -41,20 +41,20 @@
     
     
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo $conf->assetsFolderURL?>/css/dist/bootstrap.min.css">
     
         <!-- Latest compiled Jquery UI CSS -->
     <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css">-->
     
 
     <!-- jQuery library -->
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+    <script src="<?php echo $conf->assetsFolderURL?>/js/dist/jquery-3.2.1.js"></script>
+    <script src="<?php echo $conf->assetsFolderURL?>/js/dist/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
     <!-- Angular Js library-->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+    <script src="<?php echo $conf->assetsFolderURL?>/js/dist/angular-1.3.9.min.js"></script>
 
     <!-- Latest compiled bootstrap JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="<?php echo $conf->assetsFolderURL?>/js/dist/bootstrap-3.3.7.min.js"></script>
     
     
     

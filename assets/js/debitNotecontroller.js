@@ -52,7 +52,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
 
             $http({
                 method : "POST",
-                url : 'includes/dn',
+                url : 'includes/debitNote',
                 data : {invNum: invNum, token: "cancelDN"},
             }).success(function(response) {
                 if(response == 1){
@@ -85,7 +85,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
                 
             $http({
                 method : "POST",
-                url : 'includes/dn',
+                url : 'includes/debitNote',
                 data : {dn: $scope.dn, singleDN: $scope.singleDN, token: "submitDN"},
             }).success(function(response) {
                 if(response == 1){
@@ -147,7 +147,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
             $scope.dn.dn_loader = true;
             $http({
                 method : "GET",
-                url : 'includes/dn',
+                url : 'includes/debitNote',
                 params : {token: "getInvNums", ccode: ccode, cponum: cpoNo},
             }).success(function(response) {
                 if(response == 1){
@@ -177,7 +177,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
         
         $http({
             method : "GET",
-            url : 'includes/dn',
+            url : 'includes/debitNote',
             params : {token: "getEmployees"},
         }).success(function(response) {
             if(response == 1){
@@ -198,7 +198,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
             $scope.dn.dn_loader = true;
             $http({
                 method : "GET",
-                url : 'includes/dn',
+                url : 'includes/debitNote',
                 params : {token: "getCpoNums", ccode: ccode},
             }).success(function(response) {
                 if(response == 1){
@@ -234,7 +234,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
         
         $http({
             method : "GET",
-            url : 'includes/dn',
+            url : 'includes/debitNote',
             params : {token: "getAllInvs", ccode: ccode, invoiceNum: invNum, cpoNo: cpoNum},
         }).success(function(response) {
             if(response == 1){
@@ -262,7 +262,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
             
             $http({
                 method : "GET",
-                url : 'includes/dn',
+                url : 'includes/debitNote',
                 params : {token: "getDNDetails", ccode : $scope.dn.ccode},
             }).success(function(response) {
                 if(response == 1){
@@ -333,7 +333,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
             $scope.dn.dn_loader = true;
             $http({
                 method : "GET",
-                url : 'includes/dn',
+                url : 'includes/debitNote',
                 params : {token: "getClients"},
             }).success(function(response) {
                 if(response == 1){

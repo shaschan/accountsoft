@@ -295,7 +295,7 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
                     $scope.quote.message = "Something went wrong! Please try again after some time.";
                 }else{
                     var clNameDiv = document.getElementById('clientNames');
-                    angular.element(clNameDiv).empty();
+                    //angular.element(clNameDiv).empty();
                     angular.forEach(response, function(value, key) {
                         var html = '<li style="cursor: pointer; padding: 8px;" ng-click='+
                                 '"quote.fillUp('+"'"+value.client_name+"','"+value.emails+"','"+value.billing_address+"','"+
