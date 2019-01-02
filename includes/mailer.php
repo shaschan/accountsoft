@@ -1,7 +1,7 @@
 <?php
     include_once dirname(__FILE__,2).'/config.php';
     $conf = new config();
-    
+
     require_once $conf->PHPMailerBASEPATH."class.phpmailer.php";
     require_once $conf->includesFolderBASEPATH."dbconn.php";
 
@@ -32,7 +32,7 @@
             $mail->Body    = $body;
             return $mail->Send();
         }
-        
+
         public function sendVerfication($user, $hash=''){
 
             $conf = new config();
@@ -55,7 +55,7 @@
 
                 // Gets query result
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                
+
                 if($result['activated'] == '1' && $result['active'] == '1'){
                     //already activated and active
                     return 0;

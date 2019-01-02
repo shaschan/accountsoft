@@ -11,7 +11,7 @@
         <div class="list-group">
 
             <a href="javascript:void(0)" ng-click="activatePanel(panels.dashboard);" class="list-group-item" style="background: aliceblue; color: black; font-weight: 600; text-align: center;">Dashboard</a>
-            
+
             <a href="#acc_rec" class="list-group-item" data-toggle="collapse" style="background: aliceblue; color: black; font-weight: 600;">Account Receivables</a>
 
             <div class="list-group collapse" id="acc_rec">
@@ -33,7 +33,7 @@
                 <a href="javascript:void(0)" ng-click="activatePanel(panels.accountPay.cwdVoucher);" class="list-group-item" style="font-size: 10px;">CWD Voucher</a>
                 <a href="javascript:void(0)" ng-click="activatePanel(panels.accountPay.cashPaymentVoucher);" class="list-group-item" style="font-size: 10px;">Cash Payment Voucher</a>
             </div>
-            
+
             <a href="#emp" class="list-group-item" data-toggle="collapse" style="background: aliceblue; color: black; font-weight: 600">Employee</a>
 
             <div class="list-group collapse" id="emp">
@@ -58,16 +58,16 @@
 
             </div>-->
         </div>
-        
+
         <div style="text-align: center; color: whitesmoke; padding-top: 120px; font-size: 10px;">
-            &COPY;2017 Megalution Service Pvt Ltd
+            &COPY;2018 Megalution Service Pvt Ltd
         </div>
     </div>
-    
+
     <div ng-include="'<?php echo $conf->srcFolderURL?>'+activePanel.url"></div>
-    
+
 </div>
-    
+
     <script>
 //    $(document).ready(function () {
 //        $('#test').BootSideMenu({

@@ -34,11 +34,11 @@ fmsApp.controller('cpoController', ['$scope', '$http', '$timeout', '$sce', '$com
                                                                 $scope.cpo.sac = sac;
                                                             }
     };
-    
+
     function alterEstSectionList(ccode){
-        
+
         listup(ccode,'');
-        
+
         if($scope.cpo.cpo_loader === false){
             $scope.cpo.cpo_loader = true;
             $http({
@@ -67,13 +67,13 @@ fmsApp.controller('cpoController', ['$scope', '$http', '$timeout', '$sce', '$com
             $scope.cpo.message = ("Please wait...");
         }
     };
-    
+
     function listup(ccode, estNo){
         if(ccode == '') return;
 
         if(estNo != '')
             $scope.cpo.estNos = estNo;
-        
+
         $http({
             method : "GET",
             url : 'includes/cpo',
@@ -88,18 +88,18 @@ fmsApp.controller('cpoController', ['$scope', '$http', '$timeout', '$sce', '$com
         }).error(function(data) {
             $scope.cpo.message = ("Something went wrong! Please try again after some time. "+data);
         });
-        
+
     };
-    
+
     function generateAndAssignPC(){
-        if($scope.cpo.ccode !== '' && $scope.cpo.cpo_loader === false && 
+        if($scope.cpo.ccode !== '' && $scope.cpo.cpo_loader === false &&
                 $scope.cpo.estNos !== '' && $scope.cpo.estNos !== 'Estimate Number' &&
                 $scope.cpo.cponum !== ''){
 
             $scope.cpo.cpo_loader = true;
-            
+
             $scope.cpo.pc = $scope.cpo.clientName.substring(0,3)+'/'+$scope.cpo.cponum.substring(0,5);
-            
+
             $http({
                 method : "POST",
                 url : 'includes/cpo',
@@ -126,7 +126,7 @@ fmsApp.controller('cpoController', ['$scope', '$http', '$timeout', '$sce', '$com
             }
         }
     };
-      
+
     function clearEverything(){
         $scope.cpo.tendency = false;
         $scope.cpo.generate = false;
@@ -143,18 +143,18 @@ fmsApp.controller('cpoController', ['$scope', '$http', '$timeout', '$sce', '$com
         $scope.cpo.primtendency = true;
         $scope.cpo.estNos = "Estimate Number";
         $scope.cpo.cpo_loader = false;
-    };  
-    
+    };
+
     function downloadPDF(){
-        
+
     };
-    
+
     function printPDF(){
-        
+
     };
-    
+
     function getClientsList(){
-        
+
         if($scope.cpo.cpo_loader === false){
             $scope.cpo.cpo_loader = true;
             $http({
@@ -184,8 +184,8 @@ fmsApp.controller('cpoController', ['$scope', '$http', '$timeout', '$sce', '$com
             $scope.cpo.message = ("Please wait...");
         }
     };
-    
+
     getClientsList();
-    
+
   }]
 );

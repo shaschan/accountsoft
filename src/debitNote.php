@@ -50,14 +50,14 @@
             <input class="btn btn-default" style="font-weight: 900;" type="button" value="Clear" ng-click="dn.clearEverything();">
         </div>
     </div>
-    
+
     <div ng-custom-if="dn.generate">
         <div class="" style="border-top: 1px solid #e7eceb;"></div>
         <div style="margin: 16px; text-align: center;">
             DN number: <input style="width: 200px; display: inline-block;" type='text' ng-model='singleDN.dnnum' class="form-control" placeholder="Project Code" readonly="true" required>
         </div>
         <div class="" style="border-top: 1px solid #e7eceb;"></div>
-        
+
         <div style="text-align: center; margin-top: 16px;">
             <div class="dropdown" style="margin: 16px; display: inline-block;">
                 <input class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" value="{{singleDN.items.adOrInOrFin}}">
@@ -90,7 +90,7 @@
         </div>
     </div>
     <div>
-        <div ng-custom-if="!dn.generate" class="table-responsive">          
+        <div ng-custom-if="!dn.generate" class="table-responsive">
             <table class="table">
                 <thead>
                     <tr>
@@ -112,6 +112,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="desc in dn.estList">
+                        <td style="text-align: center;">{{desc.invoiceNum}}</td>
                         <td style="text-align: center;">{{desc.description}}</td>
                         <td style="text-align: center;">{{desc.cponum}}</td>
                         <td style="text-align: center;">{{desc.pc}}</td>
@@ -129,8 +130,8 @@
                 </tbody>
             </table>
         </div>
-        
-        <div ng-custom-if="dn.generate" class="table-responsive">          
+
+        <div ng-custom-if="dn.generate" class="table-responsive">
             <table class="table">
                 <thead>
                     <tr>
@@ -228,7 +229,7 @@
                                 <img src="assets/images/loader.gif" style="max-width: 30px;" />
                             </div>
                             <div style="float:right">
-                                <input class="btn btn-default btn-primary" style="font-weight: 900;" type="button" ng-click="singleDN.submitDN();" value="Submit DN">                        
+                                <input class="btn btn-default btn-primary" style="font-weight: 900;" type="button" ng-click="singleDN.submitDN();" value="Submit DN">
                                 <button type="button" class="btn btn-default" data-dismiss="modal" style="color: #0d98bc; border-color: #0d98bc;">Close</button>
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 ?>
 <div ng-controller="dashboardController" ng-cloak>
@@ -49,7 +49,7 @@
             <div style="padding-bottom: 8px; font-size: 14px;">
                 Enter your Billing Address
             </div>
-            <input type="text" placeholder="text input" style="padding: 8px; margin-bottom: 16px;" ng-model="dashboard.addr" ng-pattern="/^[a-zA-Z0-9\.]*$/">
+            <input type="text" placeholder="text input" style="padding: 8px; margin-bottom: 16px;" ng-model="dashboard.addr">
             <div>
                 <button ng-click="dashboard.saveProfile()" type="button" class="btn btn-default" style="background-color: #0d98bc; color: white; margin-left: 64px;">Next</button>
             </div>

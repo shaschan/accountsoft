@@ -23,7 +23,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
         submitDN: function() { submitDN() },
         cancelDN: function(invNum, idx){var inv_num = invNum; var indx = idx; cancelDN(inv_num, indx);},
         getDN: function(invNum){var inv_num = invNum; getDN(inv_num);},
-        clearInvSegment: function(){     
+        clearInvSegment: function(){
                                         $scope.singleDN.items = {
                                                                         adOrInOrFin: 'Select One',
                                                                         description: '',
@@ -37,17 +37,17 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
                                         $scope.singleDN.addedBy = 'Select Adder';
                                         $scope.singleDN.approvedBy1 = 'Select Approver';
                                         $scope.singleDN.approvedBy2 = 'Select Approver';
-                                                                    
+
         }
-        
+
     };
-    
+
     function getDN(invNum){
-        
+
     };
-    
+
     function cancelDN(invNum, idx){
-        
+
         if(idx !== '' && invNum != '' && invNum != 0){
 
             $http({
@@ -68,7 +68,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
             $scope.dn.message = ("Something went wrong! Please try again after some time.");
         }
     };
-    
+
     function submitDN(){
         if(     $scope.dn.ccode !== '' && $scope.singleDN.dn_loader === false && $scope.dn.generate === true &&
                 $scope.dn.estNos !== '' && $scope.dn.estNos !== 'Estimate Number' &&
@@ -82,7 +82,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
                 $scope.singleDN.items.netValue != '' && $scope.singleDN.items.paymentDate != 'Select One' &&
                 $scope.singleDN.items.tax != ''
             ){
-                
+
             $http({
                 method : "POST",
                 url : 'includes/debitNote',
@@ -108,7 +108,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
             }
         }
     };
-    
+
     $scope.dn = {
         tendency: false,
         primtendency : false,
@@ -140,9 +140,9 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
                                                             },
         fillupPos: function(ccode, cpono){var c_code = ccode; var cpo_no = cpono; alterInvSectionList(c_code, cpo_no);}
     };
-    
+
     function alterInvSectionList(ccode, cpoNo){
-        
+
         if($scope.dn.dn_loader === false){
             $scope.dn.dn_loader = true;
             $http({
@@ -172,9 +172,9 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
             $scope.dn.message = ("Please wait...");
         }
     };
-    
+
     function getEmployeesDetails() {
-        
+
         $http({
             method : "GET",
             url : 'includes/debitNote',
@@ -189,11 +189,11 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
             $scope.dn.message = ("Something went wrong! Please try again after some time. "+data);
         });
     };
-    
+
     function alterCPOSectionList(ccode){
-        
+
         listup(ccode, '', '');
-        
+
         if($scope.dn.dn_loader === false){
             $scope.dn.dn_loader = true;
             $http({
@@ -222,16 +222,16 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
             $scope.dn.message = ("Please wait...");
         }
     };
-    
+
     function listup(ccode, cpoNum = '', invNum = ''){
         if(ccode == '') return;
 
         if(cpoNum != '')
             $scope.dn.cpoNums = cpoNum;
-        
+
         if(invNum != '' && cpoNum != '')
             $scope.dn.invNums = invNum;
-        
+
         $http({
             method : "GET",
             url : 'includes/debitNote',
@@ -246,9 +246,9 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
         }).error(function(data) {
             $scope.dn.message = ("Something went wrong! Please try again after some time. "+data);
         });
-        
+
     };
-    
+
     function generateAndAssignDNNum(){
         if($scope.dn.ccode !== '' && $scope.dn.dn_loader === false && $scope.dn.generate === false &&
                 $scope.dn.estNos !== '' && $scope.dn.estNos !== 'Estimate Number' &&
@@ -257,9 +257,9 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
             $scope.dn.dn_loader = true;
             $scope.dn.message = '';
             $scope.dn.generate = true;
-            
+
             $scope.singleDN.dnnum = $scope.dn.clientName.substring(0,3)+(new Date()).getFullYear().toString()+"0"+($scope.singleDN.dnnum+1);
-            
+
             $http({
                 method : "GET",
                 url : 'includes/debitNote',
@@ -285,7 +285,7 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
             }
         }
     };
-      
+
     function clearEverything(){
         $scope.dn.tendency = false;
         $scope.dn.generate = false;
@@ -317,18 +317,18 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
         $scope.singleDN.addedBy = 'Select Adder';
         $scope.singleDN.approvedBy1 = 'Select Approver';
         $scope.singleDN.approvedBy2 = 'Select Approver';
-    };  
-    
+    };
+
     function downloadPDF(){
-        
+
     };
-    
+
     function printPDF(){
-        
+
     };
-    
+
     function getClientsList(){
-        
+
         if($scope.dn.dn_loader === false){
             $scope.dn.dn_loader = true;
             $http({
@@ -359,8 +359,8 @@ fmsApp.controller('debitNoteController', ['$scope', '$http', '$timeout', '$sce',
             $scope.dn.message = ("Please wait...");
         }
     };
-    
+
     getClientsList();
-    
+
   }]
 );

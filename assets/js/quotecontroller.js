@@ -2,7 +2,7 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
   function ($scope, $http, $timeout ,$sce, $compile) {
 
 //    $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-
+  
     $scope.quote = {
         tendency: true,
         clientName: "Client Name",
@@ -36,14 +36,14 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
                                                                         $scope.quote.sac = sac;
                                                                       }
     };
-    
+
     $scope.quoted ={
-        
+
     };
-    
+
     function checkIfSingQutItemsIsEmpty(jsArr){//eg pass singlequote.items
         if(jsArr == '') return false;
-        
+
         if(angular.isArray(jsArr)){
             var result = true;
             angular.forEach(jsArr, function(value, key) {
@@ -56,7 +56,7 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
             return false;
         }
     };
-    
+
     $scope.singlequote = {
         estimateNo: "",
         items : [],
@@ -77,8 +77,8 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
                         },
         del : function(i){$scope.singlequote.items.splice(i,1);}
     };
-    
-    
+
+
     function getEmployeesDetails(){
         //get current date
         var today = new Date();
@@ -94,9 +94,9 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
             var nextYr2 = today.getFullYear().toString();
             fiscalYr = (today.getFullYear() - 1).toString() + "-" + nextYr2.charAt(2) + nextYr2.charAt(3);
         }
-        
+
         $scope.singlequote.estimateNo = $scope.quote.clientName.substring(0,3)+"/"+fiscalYr+"/"+($scope.quoted.estimateCount+1);
-                
+
         if($scope.quote.quote_loader === false){
             $scope.quote.quote_loader = true;
             $http({
@@ -118,11 +118,11 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
             $scope.quote.message = ("Please wait...");
         }
     };
-    
+
     function submitQuote(){
         if($scope.singlequote.estimateNo !== '' && checkIfSingQutItemsIsEmpty($scope.singlequote.items) && $scope.singlequote.addedBy !== "" && $scope.singlequote.addedBy !== "Select Adder"
                 && $scope.singlequote.approvedBy1 !== '' && $scope.singlequote.approvedBy1 !== 'Select Approver' && $scope.singlequote.approvedBy2 !== '' && $scope.singlequote.approvedBy2 !== 'Select Approver' && $scope.singlequote.quote_loader === false){
-            
+
             var moreData = {
                 dateOfCreation : $scope.quote.dateOfCreation,
                 delDate : $scope.quote.delDate,
@@ -130,7 +130,7 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
                 ccode : $scope.quote.ccode,
                 estimateCount : ($scope.quoted.estimateCount+1)
             };
-            
+
             moreData = angular.extend(moreData,$scope.singlequote);
 
             $scope.singlequote.quote_loader = true;
@@ -160,7 +160,7 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
             }
         }
     };
-    
+
     function editClient(){
         $scope.quote.raiseQ = false;
         $scope.quote.quote_loader = false;
@@ -169,9 +169,9 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
         $scope.quote.edit = true;
         $scope.quote.saveorup = "Update";
     };
-    
+
     function raiseQuote(){
-        if($scope.quote.clientName !== 'Client Name' && $scope.quote.clientName !== '' && $scope.quote.emails !== '' && $scope.quote.billingAddress !== '' 
+        if($scope.quote.clientName !== 'Client Name' && $scope.quote.clientName !== '' && $scope.quote.emails !== '' && $scope.quote.billingAddress !== ''
                 && $scope.quote.pan !== '' && $scope.quote.gst !== '' && $scope.quote.sac !== '' && $scope.quote.ccode !== ''
                 && $scope.quote.dateOfCreation !== '' && $scope.quote.delDate !== '' && $scope.quote.amount !== ''){
 
@@ -179,7 +179,7 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
             $scope.quote.tendency = true;
             $scope.quote.raiseQ = false;
             $scope.quote.quoted = true;
-            
+
             if($scope.quote.quote_loader === false){
                 $scope.quote.quote_loader = true;
                 $http({
@@ -201,14 +201,14 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
             }else{
                 $scope.quote.message = ("Please wait...");
             }
-            
+
         }else{
             $scope.quote.message = ("One or more fields cannot be left blank.");
         }
     };
-    
+
     function addorUpClient(){
-        if($scope.quote.clientName !== 'Client Name' && $scope.quote.clientName !== ''  && $scope.quote.emails !== '' && $scope.quote.billingAddress !== '' 
+        if($scope.quote.clientName !== 'Client Name' && $scope.quote.clientName !== ''  && $scope.quote.emails !== '' && $scope.quote.billingAddress !== ''
                 && $scope.quote.pan !== '' && $scope.quote.gst !== '' && $scope.quote.sac !== '' && $scope.quote.ccode !== ""
                 && $scope.quote.quote_loader === false){
 
@@ -245,7 +245,7 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
             }
         }
     };
-      
+
     function clearEverything(){
         $scope.quote.tendency = true;
         $scope.quote.raiseQ = false;
@@ -272,18 +272,18 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
         $scope.singlequote.addedBy = 'Select Adder';
         $scope.singlequote.approvedBy1 = 'Select Approver';
         $scope.singlequote.approvedBy2 = 'Select Approver';
-    };  
-    
+    };
+
     function downloadPDF(){
-        
+
     };
-    
+
     function printPDF(){
-        
+
     };
-    
+
     function getClientsList(){
-        
+
         if($scope.quote.quote_loader === false){
             $scope.quote.quote_loader = true;
             $http({
@@ -313,8 +313,8 @@ fmsApp.controller('quoteController', ['$scope', '$http', '$timeout', '$sce', '$c
             $scope.quote.message = ("Please wait...");
         }
     };
-    
+
     getClientsList();
-    
+
   }]
 );

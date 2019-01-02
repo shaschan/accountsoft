@@ -21,7 +21,7 @@ class SignUpForm extends DbConn
             $stmtcheck->bindParam(':mobile', $user['mobile']);
             $stmtcheck->execute();
             $result = $stmtcheck->fetch(PDO::FETCH_ASSOC);
-            
+
             if (is_array($result) && $result['activated'] == '0') {
 
                 //Account not yet verified
@@ -35,12 +35,12 @@ class SignUpForm extends DbConn
                 return $failure;
 
             }elseif(is_array($result)){
-                
+
                 //Already exists
                 $failure = 3;
                 return $failure;
             }
-            
+
             $verify = 0;
             $hash = md5( rand(0,1000) );
             // prepare sql and bind parameters
@@ -60,12 +60,12 @@ class SignUpForm extends DbConn
             $stmt->execute();
 
             $conf = new config();
-            
+
             require $conf->includesFolderBASEPATH.'mailer.php';
-            
+
             $mail_ver = new Mailer();
             $ret = $mail_ver->sendVerfication($user, $hash);
-            
+
             $err = '';
 
         } catch (PDOException $e) {

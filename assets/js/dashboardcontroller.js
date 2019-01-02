@@ -1,6 +1,6 @@
-fmsApp.controller('dashboardController', ['$scope', '$http', '$timeout', 
+fmsApp.controller('dashboardController', ['$scope', '$http', '$timeout',
   function ($scope, $http, $timeout) {
-    $scope.nextToCompanyProfile = false;  
+    $scope.nextToCompanyProfile = false;
     $scope.showDashboard = false;
     $scope.dashboard = {
         companyName : '',
@@ -20,7 +20,7 @@ fmsApp.controller('dashboardController', ['$scope', '$http', '$timeout',
             verifycompany();
         }
     };
-    
+
     function verifycompany(){
         if($scope.dashboard.companyName !== '' && $scope.dashboard.dashboard_loader === false){
             $scope.nextToCompanyProfile = false;
@@ -48,7 +48,7 @@ fmsApp.controller('dashboardController', ['$scope', '$http', '$timeout',
             }
         }
     };
-    
+
     function savecompany(){
         if($scope.dashboard.addr !== '' && $scope.dashboard.sac !== '' && $scope.dashboard.gst !== '' && $scope.dashboard.pan !== '' && $scope.dashboard.cin !== '' && $scope.dashboard.dashboard_loader_2 === false){
             $scope.dashboard.dashboard_loader_2 = true;
