@@ -17,7 +17,7 @@
         public $PHPMailerBASEPATH;
         
         public $smtpUsername = "shashishchandra@gmail.com";
-        public $smtpPass = "oldold12@";
+        public $smtpPass = "password";
         public $mailFromEmail = "shashishchandra@gmail.com";
         public $mailFromName = "Shashish Chandra";
         
